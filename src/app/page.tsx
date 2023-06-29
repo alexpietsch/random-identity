@@ -1,113 +1,133 @@
-import Image from 'next/image'
+"use client"
+import { Letter } from "react-letter"
+import { useState, useEffect } from "react"
+
+import { MdOutlineCopyAll } from "react-icons/md"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+
+
+type EmailMessage = {
+	body: string
+	date: number
+	from: string
+	html: string
+	ip: string
+	subject: string
+	to: string
+}
+
+const USERNAMES = ["dark", "light", "super", "mad", "funny", "new", "happy", "cheerful", "stark", "calm", "clancy", "red", "blue", "green", "yellow", "purple", "gray", "orange", "beige", "aqua"]
+const FIRST_NAMES = ["James","Robert","John","Michael","David","William","Richard","Joseph","Thomas","Christopher","Mary","Patricia","Jennifer","Linda","Elizabeth","Barbara","Susan","Jessica","Sarah","Karen"]
+const LAST_NAMES = ["Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez","Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin"]
+
+const generateUsername = () => {
+	return `${USERNAMES[Math.floor(Math.random() * USERNAMES.length)]}${USERNAMES[Math.floor(Math.random() * USERNAMES.length)]}${Math.floor(1000 + Math.random() * 9000)}`
+}
+
+const generatePassword = () => {
+	return window.crypto.getRandomValues(new BigUint64Array(1))[0].toString(36)
+}
+
+const getFirstName = () => {
+	return FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]
+}
+
+const getLastName = () => {
+	return LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]
+}
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+	const [emailAddress, setEmailAddress] = useState("")
+	const [emailToken, setEmailToken] = useState("")
+	const [emailMessages, setEmailMessages] = useState<EmailMessage[]>()
+	const [isBlur, setIsBlur] = useState(true)
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+	const [userName, setUserName] = useState("")
+	const [password, setPassword] = useState("")
+	const [firstName, setFirstName] = useState("")
+	const [lastName, setLastName] = useState("")
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
+	useEffect(() => {
+		/* Generate new inbox */
+		fetch("https://faas-fra1-afec6ce7.doserverless.co/api/v1/web/fn-fe0afd4a-8adb-4bd1-8b1f-8f8feb60a91d/default/generate")
+		.then(r => r.json())
+		.then(data => {
+			setEmailAddress(data?.address)
+			setEmailToken(data?.token)
+		})
+	}, [])
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+	useEffect(() => {
+		setUserName(generateUsername())
+		setPassword(generatePassword())
+		setFirstName(getFirstName())
+		setLastName(getLastName())
+	}, [])
+
+	
+
+	const getEmailMessages = () => {
+		fetch("https://faas-fra1-afec6ce7.doserverless.co/api/v1/web/fn-fe0afd4a-8adb-4bd1-8b1f-8f8feb60a91d/default/auth?token="+emailToken)
+		.then(r => r.json())
+		.then(data => {
+			setEmailMessages(data?.email)
+			console.log(data)
+		})
+		
+	}
+
+	return (
+		<main className="flex h-screen w-full flex-col items-center">
+			<div className="h-[10%] w-screen p-3 flex flex-col items-center">
+				<p className="text-2xl font-bold underline">Generate a random identity</p>
+				<p className="mt-2">To get a new identity, just <span className="underline cursor-pointer" onClick={() => location.reload()}>refresh the page</span></p>
+			</div>
+			<div className="h-[40%] w-screen p-3">
+					<div className="grid grid-cols-2 grid-rows-5 gap-4">
+						<div className="col-start-1 row-start-1 flex justify-center">E-Mail</div>
+						<div className="col-start-1 row-start-2 flex justify-center">Username</div>
+						<div className="col-start-1 row-start-3 flex justify-center">Password</div>
+						<div className="col-start-1 row-start-4 flex justify-center">First name</div>
+						<div className="col-start-1 row-start-5 flex justify-center">Last name</div>
+
+						<div className="col-start-2 row-start-1"><Button onClick={() => {navigator.clipboard.writeText(emailAddress)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {emailAddress}</div>
+						<div className="col-start-2 row-start-2"><Button onClick={() => {navigator.clipboard.writeText(userName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {userName}</div>
+						<div className="col-start-2 row-start-3"><Button onClick={() => {navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button> <span className={isBlur ? "blur-sm" : ""} onMouseEnter={() => setIsBlur(false)} onMouseLeave={() => setIsBlur(true)}>{password}</span> </div>
+						<div className="col-start-2 row-start-4"><Button onClick={() => {navigator.clipboard.writeText(firstName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {firstName}</div>
+						<div className="col-start-2 row-start-5"><Button onClick={() => {navigator.clipboard.writeText(lastName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {lastName}</div>
+					</div>
+			</div>
+			<Separator />
+			<div className="h-[50%] w-full flex flex-col items-center mt-4">
+				<Button onClick={getEmailMessages} className="w-[80%] max-w-md">Get Messages for E-Mail</Button>
+				
+				<div>
+				<div className="mt-5">
+						{
+							(!emailMessages || (emailMessages && emailMessages.length < 1))
+							&& <div>No mails</div>
+						}
+					</div>
+					<div className="mt-5">
+						{emailMessages && emailMessages.map((message: EmailMessage) => {
+						return (
+							<div key={window.crypto.randomUUID()} className="border rounded-md border-gray-600 p-5 max-w-screen-lg m-4" style={{overflowWrap: "break-word"}}>
+								<><span className="text-xl font-bold">Betreff:</span> {message.subject}</>
+								<Letter html={message.body} />
+							</div>
+						)
+						})}
+					</div>
+				</div>
+				
+			</div>
+			
+			
+			
+		</main>
+	)
 }
