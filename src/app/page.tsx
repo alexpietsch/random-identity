@@ -86,7 +86,7 @@ export default function Home() {
 				<p className="text-2xl font-bold underline">Generate a random identity</p>
 				<p className="mt-2">To get a new identity, just <span className="underline cursor-pointer" onClick={() => location.reload()}>refresh the page</span></p>
 			</div>
-			<div className="h-[40%] w-screen p-3">
+			<div className="w-screen p-3" style={{overflowWrap: "break-word"}}>
 					<div className="grid grid-cols-2 grid-rows-5 gap-4">
 						<div className="col-start-1 row-start-1 flex justify-center">E-Mail</div>
 						<div className="col-start-1 row-start-2 flex justify-center">Username</div>
@@ -96,7 +96,14 @@ export default function Home() {
 
 						<div className="col-start-2 row-start-1"><Button onClick={() => {navigator.clipboard.writeText(emailAddress)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {emailAddress}</div>
 						<div className="col-start-2 row-start-2"><Button onClick={() => {navigator.clipboard.writeText(userName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {userName}</div>
-						<div className="col-start-2 row-start-3"><Button onClick={() => {navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button> <span className={isBlur ? "blur-sm" : ""} onMouseEnter={() => setIsBlur(false)} onMouseLeave={() => setIsBlur(true)}>{password}</span> </div>
+						<div className="col-start-2 row-start-3">
+							<Button onClick={() => {navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button>
+							<span className={isBlur ? "blur-sm" : ""} onMouseEnter={() => setIsBlur(false)} onMouseLeave={() => setIsBlur(true)} onClick={async () => {
+								setIsBlur(false)
+								await new Promise(resolve => setTimeout(resolve, 3000))
+								setIsBlur(true)
+							}}>{password}</span>
+						</div>
 						<div className="col-start-2 row-start-4"><Button onClick={() => {navigator.clipboard.writeText(firstName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {firstName}</div>
 						<div className="col-start-2 row-start-5"><Button onClick={() => {navigator.clipboard.writeText(lastName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {lastName}</div>
 					</div>
