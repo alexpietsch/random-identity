@@ -83,7 +83,7 @@ export default function Home() {
 	return (
 		<main className="flex h-screen w-full flex-col items-center">
 			<div className="h-[10%] w-screen p-3 flex flex-col items-center">
-				<p className="text-2xl font-bold underline">Generate a random identity{process.env.TEST_KEY}</p>
+				<p className="text-2xl font-bold underline">Generate a random identity</p>
 				<p className="mt-2">To get a new identity, just <span className="underline cursor-pointer" onClick={() => location.reload()}>refresh the page</span></p>
 			</div>
 			<div className="w-screen p-3" style={{overflowWrap: "break-word"}}>
