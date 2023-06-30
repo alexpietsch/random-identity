@@ -123,7 +123,7 @@ export default function Home() {
 						{emailMessages && emailMessages.map((message: EmailMessage) => {
 						return (
 							<div key={window.crypto.randomUUID()} className="border rounded-md border-gray-600 p-5 max-w-screen-lg m-4" style={{overflowWrap: "break-word"}}>
-								<><span className="text-xl font-bold">Betreff:</span> {message.subject}</>
+								<><span className="text-xl font-bold">Subject:</span> {message.subject}</>
 								<Letter html={message.body} />
 							</div>
 						)
