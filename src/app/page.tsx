@@ -94,23 +94,23 @@ export default function Home() {
 						<div className="col-start-1 row-start-4 flex justify-center">First name</div>
 						<div className="col-start-1 row-start-5 flex justify-center">Last name</div>
 
-						<div className="col-start-2 row-start-1"><Button onClick={() => {navigator.clipboard.writeText(emailAddress)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {emailAddress}</div>
-						<div className="col-start-2 row-start-2"><Button onClick={() => {navigator.clipboard.writeText(userName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {userName}</div>
+						<div className="col-start-2 row-start-1"><Button aria-label="Copy E-Mail Address" onClick={() => {navigator.clipboard.writeText(emailAddress)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {emailAddress}</div>
+						<div className="col-start-2 row-start-2"><Button aria-label="Copy Username" onClick={() => {navigator.clipboard.writeText(userName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {userName}</div>
 						<div className="col-start-2 row-start-3">
-							<Button onClick={() => {navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button>
+							<Button aria-label="Copy Password" onClick={() => {navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button>
 							<span className={isBlur ? "blur-sm" : ""} onMouseEnter={() => setIsBlur(false)} onMouseLeave={() => setIsBlur(true)} onClick={async () => {
 								setIsBlur(false)
 								await new Promise(resolve => setTimeout(resolve, 3000))
 								setIsBlur(true)
 							}}>{password}</span>
 						</div>
-						<div className="col-start-2 row-start-4"><Button onClick={() => {navigator.clipboard.writeText(firstName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {firstName}</div>
-						<div className="col-start-2 row-start-5"><Button onClick={() => {navigator.clipboard.writeText(lastName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {lastName}</div>
+						<div className="col-start-2 row-start-4"><Button aria-label="Copy First Name" onClick={() => {navigator.clipboard.writeText(firstName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {firstName}</div>
+						<div className="col-start-2 row-start-5"><Button aria-label="Copy Last Name" onClick={() => {navigator.clipboard.writeText(lastName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {lastName}</div>
 					</div>
 			</div>
 			<Separator />
 			<div className="h-[50%] w-full flex flex-col items-center mt-4">
-				<Button onClick={getEmailMessages} className="w-[80%] max-w-md">Get Messages for E-Mail</Button>
+				<Button aria-label="Load E-Mail messages" onClick={getEmailMessages} className="w-[80%] max-w-md">Get Messages for E-Mail</Button>
 				
 				<div>
 				<div className="mt-5">
