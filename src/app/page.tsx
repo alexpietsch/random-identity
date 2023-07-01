@@ -99,7 +99,7 @@ export default function Home() {
 							Email
 							<Popover>
 								<PopoverTrigger><MdInfoOutline aria-label="Email info" /></PopoverTrigger>
-								<PopoverContent>This is a temporary email. It'll last for at most one hour if it receives emails. If no email is sent to the address for 10 minutes, it will be deleted.</PopoverContent>
+								<PopoverContent>This is a temporary email. It&apos;ll last for at most one hour if it receives emails. If no email is sent to the address for 10 minutes, it will be deleted.</PopoverContent>
 							</Popover>
 						</div>
 						<div className="col-start-1 row-start-2 flex justify-center">Username</div>
