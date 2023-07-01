@@ -2,10 +2,17 @@
 import { Letter } from "react-letter"
 import { useState, useEffect } from "react"
 
-import { MdOutlineCopyAll } from "react-icons/md"
+import { MdOutlineCopyAll, MdInfoOutline } from "react-icons/md"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover"
+import { Skeleton } from "@/components/ui/skeleton"
+
 
 
 type EmailMessage = {
@@ -82,35 +89,45 @@ export default function Home() {
 
 	return (
 		<main className="flex h-screen w-full flex-col items-center">
-			<div className="h-[10%] w-screen p-3 flex flex-col items-center">
-				<p className="text-2xl font-bold underline">Generate a random identity</p>
+			<div className="h-[10vh] w-screen p-3 flex flex-col items-center">
+				<p className="text-2xl font-bold underline">Random identity</p>
 				<p className="mt-2">To get a new identity, just <span className="underline cursor-pointer" onClick={() => location.reload()}>refresh the page</span></p>
 			</div>
-			<div className="w-screen p-3" style={{overflowWrap: "break-word"}}>
-					<div className="grid grid-cols-2 grid-rows-5 gap-4">
-						<div className="col-start-1 row-start-1 flex justify-center">E-Mail</div>
+			<div className="w-screen p-3 mt-10" style={{overflowWrap: "break-word"}}>
+					<div className="grid grid-cols-2 grid-rows-5 gap-4 items-center">
+						<div className="col-start-1 row-start-1 flex justify-center" style={{overflow: "auto"}}>
+							Email
+							<Popover>
+								<PopoverTrigger><MdInfoOutline aria-label="Email info" /></PopoverTrigger>
+								<PopoverContent>This is a temporary email. It'll last for at most one hour if it receives emails. If no email is sent to the address for 10 minutes, it will be deleted.</PopoverContent>
+							</Popover>
+						</div>
 						<div className="col-start-1 row-start-2 flex justify-center">Username</div>
 						<div className="col-start-1 row-start-3 flex justify-center">Password</div>
 						<div className="col-start-1 row-start-4 flex justify-center">First name</div>
 						<div className="col-start-1 row-start-5 flex justify-center">Last name</div>
 
-						<div className="col-start-2 row-start-1"><Button aria-label="Copy E-Mail Address" onClick={() => {navigator.clipboard.writeText(emailAddress)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {emailAddress}</div>
-						<div className="col-start-2 row-start-2"><Button aria-label="Copy Username" onClick={() => {navigator.clipboard.writeText(userName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {userName}</div>
-						<div className="col-start-2 row-start-3">
-							<Button aria-label="Copy Password" onClick={() => {navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button>
+						<div className="col-start-2 row-start-1 flex items-center"><Button aria-label="Copy E-Mail Address" onClick={() => {navigator.clipboard.writeText(emailAddress)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {emailAddress} {!emailAddress && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}</div>
+						<div className="col-start-2 row-start-2 flex items-center"><Button aria-label="Copy Username" onClick={() => {navigator.clipboard.writeText(userName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {userName} {!userName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}</div>
+						<div className="col-start-2 row-start-3 flex items-center">
+							<Button aria-label="Copy Password" onClick={() => {console.log(password); navigator.clipboard.writeText(password)}} variant="ghost">{<MdOutlineCopyAll />}</Button>
 							<span className={isBlur ? "blur-sm" : ""} onMouseEnter={() => setIsBlur(false)} onMouseLeave={() => setIsBlur(true)} onClick={async () => {
 								setIsBlur(false)
 								await new Promise(resolve => setTimeout(resolve, 3000))
 								setIsBlur(true)
-							}}>{password}</span>
+							}}>{password} </span>{!password && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
 						</div>
-						<div className="col-start-2 row-start-4"><Button aria-label="Copy First Name" onClick={() => {navigator.clipboard.writeText(firstName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {firstName}</div>
-						<div className="col-start-2 row-start-5"><Button aria-label="Copy Last Name" onClick={() => {navigator.clipboard.writeText(lastName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {lastName}</div>
+						<div className="col-start-2 row-start-4 flex items-center"><Button aria-label="Copy First Name" onClick={() => {navigator.clipboard.writeText(firstName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {firstName} {!firstName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}</div>
+						<div className="col-start-2 row-start-5 flex items-center"><Button aria-label="Copy Last Name" onClick={() => {navigator.clipboard.writeText(lastName)}} variant="ghost">{<MdOutlineCopyAll />}</Button> {lastName} {!lastName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}</div>
 					</div>
 			</div>
+			<div>
+				<span className="text-lg font-semibold">Emails</span>
+			</div>
 			<Separator />
-			<div className="h-[50%] w-full flex flex-col items-center mt-4">
-				<Button aria-label="Load E-Mail messages" onClick={getEmailMessages} className="w-[80%] max-w-md">Get Messages for E-Mail</Button>
+			<div className="h-[50vh] w-full flex flex-col items-center mt-4">
+				
+				<Button aria-label="Load E-Mail messages" onClick={getEmailMessages} className="w-[80%] max-w-md">Get Messages for Email</Button>
 				
 				<div>
 				<div className="mt-5">
