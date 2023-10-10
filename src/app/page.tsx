@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/use-toast"
 import PasswordOptionsPopover from "@/components/passwordOptionsPopover"
 
 import { EmailMessage, PasswordOptionsType } from "@/lib/types"
+import { Toaster } from "@/components/ui/toaster"
 
 const USERNAMES = [
   "dark",
@@ -167,6 +168,7 @@ export default function Home() {
   }
 
   return (
+    <>
     <main className="flex h-screen w-full flex-col items-center">
       <div className="h-[10vh] w-screen p-3 flex flex-col items-center">
         <p className="text-2xl font-bold underline">Random identity</p>
@@ -379,5 +381,7 @@ export default function Home() {
         </div>
       </div>
     </main>
+    <Toaster />
+    </>
   )
 }
