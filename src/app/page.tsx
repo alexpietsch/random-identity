@@ -2,22 +2,16 @@
 import { Letter } from "react-letter"
 import { useState, useEffect } from "react"
 
-import { MdOutlineCopyAll, MdInfoOutline } from "react-icons/md"
+import { MdOutlineCopyAll, MdInfoOutline, MdAutorenew, MdMoreHoriz } from "react-icons/md"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useToast } from "@/components/ui/use-toast"
+import PasswordOptionsPopover from "@/components/passwordOptionsPopover"
 
-type EmailMessage = {
-  body: string
-  date: number
-  from: string
-  html: string
-  ip: string
-  subject: string
-  to: string
-}
+import { EmailMessage, PasswordOptionsType } from "@/lib/types"
 
 const USERNAMES = [
   "dark",
@@ -92,10 +86,6 @@ const generateUsername = () => {
   )}`
 }
 
-const generatePassword = () => {
-  return window.crypto.getRandomValues(new BigUint64Array(1))[0].toString(36)
-}
-
 const getFirstName = () => {
   return FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]
 }
@@ -115,6 +105,32 @@ export default function Home() {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
 
+  const [passwordOptions, setPasswordOptions] = useState<PasswordOptionsType>({
+    lowercase: true,
+    uppercase: true,
+    numbers: true,
+    symbols: true,
+    length: 16,
+  })
+
+  const { toast } = useToast()
+
+  const generatePassword = () => {
+    const lowercase = "abcdefghijklmnopqrstuvwxyz"
+    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    const numbers = "0123456789"
+    const symbols = "!@#$%^&*()_+-=[]{};':,.?"
+  
+    const allChars = `${passwordOptions.lowercase ? lowercase : ""}${passwordOptions.uppercase ? uppercase : ""}${passwordOptions.numbers ? numbers : ""}${passwordOptions.symbols ? symbols : ""}`
+                    
+    let password = ""
+    for (let i = 0; i < passwordOptions.length; i++) {
+      password += allChars.charAt(Math.floor(Math.random() * allChars.length))
+    }
+  
+    return password
+  }
+
   useEffect(() => {
     /* Generate new inbox */
     fetch("https://faas-fra1-afec6ce7.doserverless.co/api/v1/web/fn-fe0afd4a-8adb-4bd1-8b1f-8f8feb60a91d/default/generate")
@@ -127,18 +143,27 @@ export default function Home() {
 
   useEffect(() => {
     setUserName(generateUsername())
-    setPassword(generatePassword())
     setFirstName(getFirstName())
     setLastName(getLastName())
   }, [])
+
+  useEffect(() => {
+    setPassword(generatePassword())
+  }, [passwordOptions])
 
   const getEmailMessages = () => {
     fetch("https://faas-fra1-afec6ce7.doserverless.co/api/v1/web/fn-fe0afd4a-8adb-4bd1-8b1f-8f8feb60a91d/default/auth?token=" + emailToken)
       .then((r) => r.json())
       .then((data) => {
         setEmailMessages(data?.email)
-        console.log(data)
       })
+  }
+
+  const toastCopied = (type: string) => {
+    toast({
+      title: "Copied!",
+      description: `Copied ${type} to clipboard!`,
+    })
   }
 
   return (
@@ -176,36 +201,77 @@ export default function Home() {
               aria-label="Copy E-Mail Address"
               onClick={() => {
                 navigator.clipboard.writeText(emailAddress)
+                toastCopied("email address")
               }}
               variant="ghost"
+              className="m-1"
             >
               {<MdOutlineCopyAll />}
-            </Button>{" "}
+            </Button>
+
             {emailAddress} {!emailAddress && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
           </div>
+
+
           <div className="col-start-2 row-start-2 flex items-center">
             <Button
               aria-label="Copy Username"
               onClick={() => {
                 navigator.clipboard.writeText(userName)
+                toastCopied("username")
               }}
               variant="ghost"
+              className="m-1"
             >
               {<MdOutlineCopyAll />}
-            </Button>{" "}
+            </Button>
+
+            <Button
+              aria-label="Re-generate Username"
+              onClick={() => {
+                setUserName(generateUsername())
+              }}
+              variant="ghost"
+              className="m-1"
+            >
+              {<MdAutorenew />}
+            </Button>
+
             {userName} {!userName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
           </div>
+
+
           <div className="col-start-2 row-start-3 flex items-center">
             <Button
               aria-label="Copy Password"
               onClick={() => {
-                console.log(password)
                 navigator.clipboard.writeText(password)
+                toastCopied("password")
               }}
               variant="ghost"
+              className="m-1"
             >
               {<MdOutlineCopyAll />}
             </Button>
+
+            <Button
+              aria-label="Re-generate Password"
+              onClick={() => {
+                setPassword(generatePassword())
+              }}
+              variant="ghost"
+              className="m-1"
+            >
+              {<MdAutorenew />}
+            </Button>
+
+            <div className="mr-4">
+              <Popover >
+                <PopoverTrigger>{<MdMoreHoriz />}</PopoverTrigger>
+                <PopoverContent><PasswordOptionsPopover passwordOptions={passwordOptions} setPasswordOptions={setPasswordOptions} /></PopoverContent>
+              </Popover>
+            </div>
+
             <span
               className={isBlur ? "blur-sm" : ""}
               onMouseEnter={() => setIsBlur(false)}
@@ -216,34 +282,70 @@ export default function Home() {
                 setIsBlur(true)
               }}
             >
-              {password}{" "}
+
+              {password}
             </span>
-            {!password && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
+
+            <div>{!password && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}</div>
+
           </div>
+
+
           <div className="col-start-2 row-start-4 flex items-center">
             <Button
               aria-label="Copy First Name"
               onClick={() => {
                 navigator.clipboard.writeText(firstName)
+                toastCopied("first name")
               }}
               variant="ghost"
+              className="m-1"
             >
               {<MdOutlineCopyAll />}
-            </Button>{" "}
+            </Button>
+
+            <Button
+              aria-label="Re-generate First Name"
+              onClick={() => {
+                setFirstName(getFirstName())
+              }}
+              variant="ghost"
+              className="m-1"
+            >
+              {<MdAutorenew />}
+            </Button>
+
             {firstName} {!firstName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
           </div>
+
+
           <div className="col-start-2 row-start-5 flex items-center">
             <Button
               aria-label="Copy Last Name"
               onClick={() => {
                 navigator.clipboard.writeText(lastName)
+                toastCopied("last name")
               }}
               variant="ghost"
+              className="m-1"
             >
               {<MdOutlineCopyAll />}
-            </Button>{" "}
+            </Button>
+
+            <Button
+              aria-label="Re-generate Last Name"
+              onClick={() => {
+                setLastName(getFirstName())
+              }}
+              variant="ghost"
+              className="m-1"
+            >
+              {<MdAutorenew />}
+            </Button>
+
             {lastName} {!lastName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
           </div>
+
         </div>
       </div>
       <div>
