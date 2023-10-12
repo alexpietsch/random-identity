@@ -2,7 +2,7 @@
 import { Letter } from "react-letter"
 import { useState, useEffect } from "react"
 
-import { MdOutlineCopyAll, MdInfoOutline, MdAutorenew, MdMoreHoriz } from "react-icons/md"
+import { MdInfoOutline, MdAutorenew, MdMoreHoriz } from "react-icons/md"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -12,7 +12,6 @@ import { useToast } from "@/components/ui/use-toast"
 import PasswordOptionsPopover from "@/components/PasswordOptionsPopover"
 
 import { EmailMessage, PasswordOptionsType } from "@/lib/types"
-import { Toaster } from "@/components/ui/toaster"
 
 import { FIRST_NAMES, LAST_NAMES, USERNAMES } from "@/lib/constants"
 import CopyButton from "@/components/CopyButton"
@@ -117,7 +116,7 @@ export default function Home() {
 				</p>
 			</div>
 			<div className="w-screen p-3 mt-10" style={{ overflowWrap: "break-word" }}>
-				<div className="grid grid-cols-2 grid-rows-5 gap-4 items-center">
+				<div className="grid md:grid-cols-2 md:grid-rows-5 gap-4 items-center grid-cols-1 grid-rows-[10]">
 					<div className="col-start-1 row-start-1 flex justify-center" style={{ overflow: "auto" }}>
 						Email
 						<Popover>
