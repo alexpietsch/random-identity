@@ -17,8 +17,6 @@ const CopyButton = (props: CopyButtonProps) => {
 			aria-label={ariaLabel}
 			onClick={async () => {
 				if (navigator.clipboard) {
-					console.log(navigator)
-
 					navigator.clipboard.writeText(copyContent)
 				}
 				setShowCopiedIcon(true)
