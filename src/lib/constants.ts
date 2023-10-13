@@ -93,13 +93,3 @@ export const LAST_NAMES = [
     "Schulz",
     "Hoffmann"
 ]
-
-
-
-
-
-
-
-
-
-

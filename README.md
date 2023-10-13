@@ -22,6 +22,11 @@ Then, open your web browser and navigate to http://localhost:3000 to see the app
 
 To build the application, run `npm run build` and then start the application with `npm start`.
 
+## Known problems
+
+- Currently, the copy buttons don't work on every mobile browser
+- Emails are not displayed very good
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 

@@ -1,6 +1,5 @@
 "use client"
 import { Letter } from "react-letter"
-import { extract } from "letterparser"
 
 import { useState, useEffect } from "react"
 
@@ -10,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useToast } from "@/components/ui/use-toast"
 import PasswordOptionsPopover from "@/components/PasswordOptionsPopover"
 
 import { EmailMessage, PasswordOptionsType } from "@/lib/types"
@@ -237,17 +235,18 @@ export default function Home() {
 
 				<div>
 					<div className="mt-5">{(!emailMessages || (emailMessages && emailMessages.length < 1)) && <div>No mails</div>}</div>
-					<div className="mt-5  w-[90%] break-words">
+					<div className="mt-5 w-screen break-words flex justify-center items-center">
 						{emailMessages &&
-							emailMessages.map((message: any) => {
-								const { html, text } = extract(message)
-
+							emailMessages.length > 0 &&
+							emailMessages.map((message: EmailMessage) => {
 								return (
-									<div key={Math.random()} className="border rounded-md border-gray-600" style={{ overflowWrap: "break-word" }}>
-										<>
-											<span className="text-xl font-bold">Subject:</span> {message.subject}
-										</>
-										{html && <Letter html={html} text={text} />}
+									<div
+										key={Math.random()}
+										className="border rounded-md border-gray-600 w-[90%] p-5 m-1"
+										style={{ overflowWrap: "break-word" }}
+									>
+										<span className="text-xl font-bold">Subject: {message.subject}</span>
+										{message.body && <Letter html={message.body} />}
 									</div>
 								)
 							})}
