@@ -1,5 +1,7 @@
 "use client"
 import { Letter } from "react-letter"
+import { extract } from "letterparser"
+
 import { useState, useEffect } from "react"
 
 import { MdInfoOutline, MdAutorenew, MdMoreHoriz } from "react-icons/md"
@@ -49,8 +51,6 @@ export default function Home() {
 		length: 16
 	})
 
-	const { toast } = useToast()
-
 	const generatePassword = () => {
 		const lowercase = "abcdefghijklmnopqrstuvwxyz"
 		const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -97,15 +97,8 @@ export default function Home() {
 			})
 	}
 
-	const toastCopied = (type: string) => {
-		toast({
-			title: "Copied!",
-			description: `Copied ${type} to clipboard!`
-		})
-	}
-
 	return (
-		<main className="flex h-screen w-full flex-col items-center">
+		<main className="flex h-screen w-full overflow-x-clip flex-col items-center">
 			<div className="h-[10vh] w-screen p-3 flex flex-col items-center">
 				<p className="text-2xl font-bold underline">Random identity</p>
 				<p className="mt-2">
@@ -115,10 +108,10 @@ export default function Home() {
 					</span>
 				</p>
 			</div>
-			<div className="w-screen p-3 mt-10" style={{ overflowWrap: "break-word" }}>
-				<div className="grid md:grid-cols-2 md:grid-rows-5 gap-4 items-center grid-cols-1 grid-rows-[10]">
-					<div className="col-start-1 row-start-1 flex justify-center" style={{ overflow: "auto" }}>
-						Email
+			<div className="w-screen p-3 mt-10 break-words">
+				<div className="grid grid-cols-1 grid-rows-[10] md:grid-cols-2 md:grid-rows-5 gap-4">
+					<div className="col-start-1 row-start-1 flex flex-row justify-center  md:justify-end items-center">
+						<div className="font-bold underline">Email</div>
 						<Popover>
 							<PopoverTrigger>
 								<MdInfoOutline aria-label="Email info" className="ml-2" />
@@ -129,17 +122,26 @@ export default function Home() {
 							</PopoverContent>
 						</Popover>
 					</div>
-					<div className="col-start-1 row-start-2 flex justify-center">Username</div>
-					<div className="col-start-1 row-start-3 flex justify-center">Password</div>
-					<div className="col-start-1 row-start-4 flex justify-center">First name</div>
-					<div className="col-start-1 row-start-5 flex justify-center">Last name</div>
-
-					<div className="col-start-2 row-start-1 flex items-center">
-						<CopyButton ariaLabel="Copy Email" copyContent={emailAddress} />
-						{emailAddress} {!emailAddress && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
+					<div className="col-start-1 row-start-3 mt-5 md:col-start-1 md:row-start-2 flex justify-center md:justify-end items-center font-bold underline">
+						Username
+					</div>
+					<div className="col-start-1 row-start-5 mt-5 md:col-start-1 md:row-start-3 flex justify-center md:justify-end items-center font-bold underline">
+						Password
+					</div>
+					<div className="col-start-1 row-start-7 mt-5 md:col-start-1 md:row-start-4 flex justify-center md:justify-end items-center font-bold underline">
+						First name
+					</div>
+					<div className="col-start-1 row-start-9 mt-5 md:col-start-1 md:row-start-5 flex justify-center md:justify-end items-center font-bold underline">
+						Last name
 					</div>
 
-					<div className="col-start-2 row-start-2 flex items-center">
+					<div className="col-start-1 row-start-2 flex justify-center items-center md:col-start-2 md:row-start-2 md:justify-start">
+						<CopyButton ariaLabel="Copy Email" copyContent={emailAddress} />
+						<div className="break-words">{emailAddress}</div>
+						{!emailAddress && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
+					</div>
+
+					<div className="col-start-1 row-start-4 flex justify-center items-center md:col-start-2 md:row-start-2 md:justify-start">
 						<CopyButton ariaLabel="Copy Username" copyContent={userName} />
 						<Button
 							aria-label="Re-generate Username"
@@ -154,7 +156,7 @@ export default function Home() {
 						{userName} {!userName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
 					</div>
 
-					<div className="col-start-2 row-start-3 flex items-center">
+					<div className="col-start-1 row-start-6 flex justify-center items-center md:col-start-2 md:row-start-3 md:justify-start">
 						<CopyButton ariaLabel="Copy Password" copyContent={password} />
 
 						<Button
@@ -178,7 +180,7 @@ export default function Home() {
 						</div>
 
 						<span
-							className={isBlur ? "blur-sm" : ""}
+							className={isBlur ? "blur-sm w-[60%] break-words" : "w-[60%] break-words"}
 							onMouseEnter={() => setIsBlur(false)}
 							onMouseLeave={() => setIsBlur(true)}
 							onClick={async () => {
@@ -193,7 +195,7 @@ export default function Home() {
 						<div>{!password && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}</div>
 					</div>
 
-					<div className="col-start-2 row-start-4 flex items-center">
+					<div className="col-start-1 row-start-[8] flex justify-center items-center md:col-start-2 md:row-start-4 md:justify-start">
 						<CopyButton ariaLabel="Copy First Name" copyContent={firstName} />
 						<Button
 							aria-label="Re-generate First Name"
@@ -208,7 +210,7 @@ export default function Home() {
 						{firstName} {!firstName && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
 					</div>
 
-					<div className="col-start-2 row-start-5 flex items-center">
+					<div className="col-start-1 row-start-[10] flex justify-center items-center md:col-start-2 md:row-start-5 md:justify-start">
 						<CopyButton ariaLabel="Copy Last Name" copyContent={lastName} />
 						<Button
 							aria-label="Re-generate Last Name"
@@ -224,11 +226,11 @@ export default function Home() {
 					</div>
 				</div>
 			</div>
-			<div>
+			<div className="mt-20">
 				<span className="text-lg font-semibold">Emails</span>
 			</div>
 			<Separator />
-			<div className="h-[50vh] w-full flex flex-col items-center mt-4">
+			<div className="h-[50vh] w-full flex flex-col items-center mt-4 pb-60">
 				<Button aria-label="Load E-Mail messages" onClick={getEmailMessages} className="w-[80%] max-w-md">
 					Fetch messages for Email
 				</Button>
@@ -237,19 +239,17 @@ export default function Home() {
 					<div className="mt-5">
 						{(!emailMessages || (emailMessages && emailMessages.length < 1)) && <div className="text-">No mails</div>}
 					</div>
-					<div className="mt-5">
+					<div className="mt-5  w-[90%] break-words">
 						{emailMessages &&
-							emailMessages.map((message: EmailMessage) => {
+							emailMessages.map((message: any) => {
+								const { html, text } = extract(message)
+
 								return (
-									<div
-										key={window.crypto.randomUUID()}
-										className="border rounded-md border-gray-600 p-5 max-w-screen-lg m-4"
-										style={{ overflowWrap: "break-word" }}
-									>
+									<div key={Math.random()} className="border rounded-md border-gray-600" style={{ overflowWrap: "break-word" }}>
 										<>
 											<span className="text-xl font-bold">Subject:</span> {message.subject}
 										</>
-										<Letter html={message.body} />
+										{html && <Letter html={html} text={text} />}
 									</div>
 								)
 							})}
