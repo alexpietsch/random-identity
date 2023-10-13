@@ -108,9 +108,9 @@ export default function Home() {
 					</span>
 				</p>
 			</div>
-			<div className="w-screen p-3 mt-10 break-words">
+			<div className="w-full p-3 mt-10 break-words">
 				<div className="grid grid-cols-1 grid-rows-[10] md:grid-cols-2 md:grid-rows-5 gap-4">
-					<div className="col-start-1 row-start-1 flex flex-row justify-center  md:justify-end items-center">
+					<div className="col-start-1 row-start-1 md:col-start-1 md:row-start-1 md:mr-[16px] flex items-center justify-center md:justify-end font-bold underline">
 						<div className="font-bold underline">Email</div>
 						<Popover>
 							<PopoverTrigger>
@@ -122,20 +122,20 @@ export default function Home() {
 							</PopoverContent>
 						</Popover>
 					</div>
-					<div className="col-start-1 row-start-3 mt-5 md:col-start-1 md:row-start-2 flex justify-center md:justify-end items-center font-bold underline">
+					<div className="col-start-1 row-start-3 flex justify-center items-center font-bold underline md:justify-end md:col-start-1 md:row-start-2 md:mr-[16px]">
 						Username
 					</div>
-					<div className="col-start-1 row-start-5 mt-5 md:col-start-1 md:row-start-3 flex justify-center md:justify-end items-center font-bold underline">
+					<div className="col-start-1 row-start-5 flex justify-center items-center font-bold underline md:justify-end md:col-start-1 md:row-start-3 md:mr-[16px]">
 						Password
 					</div>
-					<div className="col-start-1 row-start-7 mt-5 md:col-start-1 md:row-start-4 flex justify-center md:justify-end items-center font-bold underline">
+					<div className="col-start-1 row-start-7 flex justify-center items-center font-bold underline md:justify-end md:col-start-1 md:row-start-4 md:mr-[16px]">
 						First name
 					</div>
-					<div className="col-start-1 row-start-9 mt-5 md:col-start-1 md:row-start-5 flex justify-center md:justify-end items-center font-bold underline">
+					<div className="col-start-1 row-start-9 flex justify-center items-center font-bold underline md:justify-end md:col-start-1 md:row-start-5 md:mr-[16px]">
 						Last name
 					</div>
 
-					<div className="col-start-1 row-start-2 flex justify-center items-center md:col-start-2 md:row-start-2 md:justify-start">
+					<div className="col-start-1 row-start-2 flex justify-center items-center md:col-start-2 md:row-start-1 md:justify-start">
 						<CopyButton ariaLabel="Copy Email" copyContent={emailAddress} />
 						<div className="break-words">{emailAddress}</div>
 						{!emailAddress && <Skeleton className="w-[50%] max-w-[200px] h-[20px]" />}
@@ -180,7 +180,7 @@ export default function Home() {
 						</div>
 
 						<span
-							className={isBlur ? "blur-sm w-[60%] break-words" : "w-[60%] break-words"}
+							className={isBlur ? "blur-sm break-words" : "break-words"}
 							onMouseEnter={() => setIsBlur(false)}
 							onMouseLeave={() => setIsBlur(true)}
 							onClick={async () => {
@@ -231,14 +231,12 @@ export default function Home() {
 			</div>
 			<Separator />
 			<div className="h-[50vh] w-full flex flex-col items-center mt-4 pb-60">
-				<Button aria-label="Load E-Mail messages" onClick={getEmailMessages} className="w-[80%] max-w-md">
+				<Button aria-label="Load E-Mail messages" onClick={getEmailMessages} className="max-w-[230px] min-w-[130px]">
 					Fetch messages for Email
 				</Button>
 
 				<div>
-					<div className="mt-5">
-						{(!emailMessages || (emailMessages && emailMessages.length < 1)) && <div className="text-">No mails</div>}
-					</div>
+					<div className="mt-5">{(!emailMessages || (emailMessages && emailMessages.length < 1)) && <div>No mails</div>}</div>
 					<div className="mt-5  w-[90%] break-words">
 						{emailMessages &&
 							emailMessages.map((message: any) => {
