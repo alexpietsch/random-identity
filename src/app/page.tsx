@@ -234,7 +234,9 @@ export default function Home() {
 				</Button>
 
 				<div>
-					<div className="mt-5">{(!emailMessages || (emailMessages && emailMessages.length < 1)) && <div>No mails</div>}</div>
+					<div className="mt-5 flex justify-center items-center">
+						{(!emailMessages || (emailMessages && emailMessages.length < 1)) && <div>No mails</div>}
+					</div>
 					<div className="mt-5 w-screen break-words flex justify-center items-center">
 						{emailMessages &&
 							emailMessages.length > 0 &&
